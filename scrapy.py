@@ -43,12 +43,19 @@ def retornaTodas():
 @app.route('/api/linha/<nome_linha>', methods=['GET'])
 
 def retornaLinha(nome_linha):
-    print(nome_linha)
-    dataframe = pd.read_csv(nome_linha+'.csv')
-    horarios_json = dataframe.to_json(orient='records')
+    horarios_linha = []
+    dataframe = pd.ExcelFile(nome_linha+'.xls')
+    sheets = dataframe.sheet_names
+    df = pd.read_excel(dataframe, sheets[0])
+    json = df.to_json(orient='records')
+    # for i in range(0, len(sheets)):
+    #     # horarios_linha[sheets[i]] = []
+    #     df = pd.read_excel(dataframe, sheets[i])
+    #     horarios_linha.append({
+    #         sheets[i]: df.to_json(orient='records')
+    #     })
 
-    return horarios_json
-
+    return json
 
 
 if __name__ == '__main__':
