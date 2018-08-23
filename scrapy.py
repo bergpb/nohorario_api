@@ -40,24 +40,25 @@ def retornaTodas():
   return jsonify(rotas=json)
   
   
-@app.route('/api/<nome_linha>/<dia>', methods=['GET'])
+  
+@app.route('/api/<nome_linha>', methods=['GET'])
 
-def retornaLinha(nome_linha, dia):
+def retornaLinha(nome_linha):
+    horarios_linha = {'dias_uteis': [], 'sabado': [], 'domingo': []}
     dataframe = pd.ExcelFile(nome_linha+'.xls')
     sheets = dataframe.sheet_names
-    df = pd.read_excel(dataframe, dia)
-    horarios_linha = df.to_json(orient='records')
     
     # esse for retorna todas as abas do excel
-    #for i in range(0, len(sheets)):
-    #    df = pd.read_excel(dataframe, sheets[i])
-    #    horarios_linha.append({
-    #        horarios_linha[sheets[i]]: df.to_json(orient='records')
-    #    })
-    
-        
-        
-    return(horarios_linha)
+    for i in range(0, len(sheets)):
+        df = pd.read_excel(dataframe, sheets[i])
+        for index, row in df.iterrows():
+            horarios_linha[sheets[i]].append({
+                'inicio':row['inicio'],
+                'fim':row['fim']
+            })
+            
+            
+    return jsonify(horarios_linha)
     
     
 if __name__ == '__main__':
