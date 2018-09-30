@@ -1,1 +1,1 @@
-web: python scrapy.py
+web: python xls_to_json.py
